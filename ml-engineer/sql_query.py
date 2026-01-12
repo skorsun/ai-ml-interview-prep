@@ -1,14 +1,28 @@
 """
 SQL Query Example - User Purchase Pattern Analysis
 
-This query analyzes user purchase patterns and calculates typical pace between purchases.
+This demonstrates a common PostgreSQL error and its fix for ML Engineers working with data pipelines.
 
+PROBLEM:
+--------
 The original query had an error on line 21:
 ERROR: function round(interval, integer) does not exist
 LINE 21:     ROUND(p.avg_days_between, 1) as typical_pace_days,
 
+ROOT CAUSE:
+-----------
 PostgreSQL's ROUND function doesn't work directly with INTERVAL types.
-Solution: Convert interval to days (numeric) first, then round.
+When calculating AVG() on date differences, PostgreSQL returns an INTERVAL type.
+
+SOLUTION:
+---------
+Convert interval to days (numeric) first, then round.
+Use: ROUND(EXTRACT(EPOCH FROM interval) / 86400, 1)
+
+This is relevant for ML Engineers who:
+- Build feature pipelines with time-based features
+- Calculate user behavior patterns from event logs
+- Need to aggregate temporal data for model training
 """
 
 # Original query with error (commented out)
